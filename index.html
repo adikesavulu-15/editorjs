@@ -17,6 +17,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/edit/matchbrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/javascript-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/javascript-hint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/lint/lint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/lint/javascript-lint.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.css">
     <style>
         body {
@@ -135,12 +141,9 @@ const editor = CodeMirror(document.getElementById('editor'), {
     scrollbarStyle: 'overlay',
     matchBrackets: true,
     autoCloseTags: true,
-    extraKeys: {
-        'Ctrl-Space': 'autocomplete',
-    },
-    theme: 'eclipse', // Use 'darcula' theme for the editor
+    theme: 'eclipse',
     styleActiveLine: true,
-    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
     foldGutter: true,
     lint: true,
     lintOnChange: true,
@@ -148,8 +151,52 @@ const editor = CodeMirror(document.getElementById('editor'), {
         esversion: 6,
     },
     lintAsync: true,
-    gutters: ['CodeMirror-lint-markers'],
+    extraKeys: {
+        'Ctrl-Space': 'autocomplete',
+    },
+    hintOptions: {
+        completeSingle: false, // Whether to automatically select the only completion
+    },
+    showHint: true, // Enable code hints
 });
+
+// Load JavaScript linting library
+CodeMirror.registerHelper("lint", "javascript", CodeMirror.lint.javascript);
+
+// CodeMirror autocomplete setup
+CodeMirror.commands.autocomplete = function (cm) {
+    cm.showHint({
+        hint: CodeMirror.hint.javascript,
+        completeSingle: false,
+    });
+};
+
+// Run the code on pressing Ctrl + Enter
+editor.setOption('extraKeys', {
+    'Ctrl-Enter': function () {
+        runCode();
+    },
+});
+
+function runCode() {
+    const code = editor.getValue();
+    const outputDiv = document.createElement('div');
+    outputDiv.innerHTML = '<strong></strong>';
+
+    try {
+        new Function(code)();
+    } catch (error) {
+        outputDiv.innerHTML += '<br/><span style="color: red;">Error: ' + error.message + '</span>';
+    }
+
+    consoleOutput.appendChild(outputDiv);
+}
+
+// Clear console output
+function clearConsole() {
+    consoleOutput.innerHTML = '';
+}
+
 
 
         const consoleOutput = document.getElementById('consoleOutput');
@@ -185,10 +232,7 @@ const editor = CodeMirror(document.getElementById('editor'), {
         }
 
         // Run code in the editor
-        function runCode() {
-            toggleOutput('editorOutput');
-            executeCode();
-        }
+       
 
         // Save code
         function saveCode() {
@@ -197,9 +241,7 @@ const editor = CodeMirror(document.getElementById('editor'), {
         }
 
         // Clear console output
-        function clearConsole() {
-            consoleOutput.innerHTML = '';
-        }
+      
 
         // Toggle between editor and console outputs
         function toggleOutput(output) {
