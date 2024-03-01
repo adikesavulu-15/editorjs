@@ -4,23 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9981055443242316" crossorigin="anonymous"></script>
     <title>Play with JavaScript Online Editor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/theme/eclipse.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/scroll/simplescrollbars.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/scroll/simplescrollbars.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/edit/closebrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/edit/matchbrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/javascript-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/lint/lint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/lint/javascript-lint.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.css">
-
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -53,12 +42,12 @@
             display: flex;
             flex: 1;
             flex-direction: row;
-            padding-top: 60px; /* Adjusted padding for the editor */
+            padding-top: 40px;
         }
 
         #editor {
             width: 50%;
-            height: 100vh; /* Set maximum height to viewport height */
+            height: 100vh;
             border: 1px solid lightgray;
         }
 
@@ -75,7 +64,6 @@
             width: 50%;
         }
 
-        /* Add styles for buttons */
         button {
             padding: 10px;
             cursor: pointer;
@@ -125,7 +113,6 @@
     </div>
 
     <script>
-        // Initialize CodeMirror
         const editor = CodeMirror(document.getElementById('editor'), {
             mode: 'javascript',
             lineNumbers: true,
@@ -150,15 +137,11 @@
                 'Ctrl-Space': 'autocomplete',
             },
             hintOptions: {
-                completeSingle: false, // Whether to automatically select the only completion
+                completeSingle: false,
             },
-            showHint: true, // Enable code hints
+            showHint: true,
         });
 
-        // Load JavaScript linting library
-        CodeMirror.registerHelper("lint", "javascript", CodeMirror.lint.javascript);
-
-        // CodeMirror autocomplete setup
         CodeMirror.commands.autocomplete = function (cm) {
             cm.showHint({
                 hint: CodeMirror.hint.javascript,
@@ -166,7 +149,6 @@
             });
         };
 
-        // Run the code on pressing Ctrl + Enter
         editor.setOption('extraKeys', {
             'Ctrl-Enter': function () {
                 runCode();
@@ -179,16 +161,32 @@
             clearConsole();
             const code = editor.getValue();
 
-          
+            const iframe = document.createElement('iframe');
+            document.body.appendChild(iframe);
 
-          
+            iframe.contentWindow.onerror = function (message, source, lineno, colno, error) {
+                consoleOutput.innerHTML = '<span style="color: red;">Error: ' + message + '</span>';
+            };
+
+            iframe.contentWindow.console.log = function (message) {
+                const outputDiv = document.createElement('div');
+                outputDiv.innerHTML = '<span style="color: green;">&lt; ' + message + '</span>';
+                consoleOutput.appendChild(outputDiv);
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            };
+
+            iframe.contentDocument.open();
+            iframe.contentDocument.write('<script>' + code + '</script>');
+            iframe.contentDocument.close();
+
+            document.body.removeChild(iframe);
+        }
 
         function clearConsole() {
             consoleOutput.innerHTML = '';
         }
 
         function saveCode() {
-            // Add your code to save the code
             console.log('Code saved');
         }
     </script>
