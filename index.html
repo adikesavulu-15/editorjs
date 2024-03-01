@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9981055443242316"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9981055443242316" crossorigin="anonymous"></script>
     <title>Play with JavaScript Online Editor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/theme/darcula.min.css">
@@ -25,31 +24,47 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             height: 100vh;
+        }
+
+        #navbar {
+            background-color: #333;
+            color: red;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        #navbar a {
+            color: red;
+            text-decoration: none;
         }
 
         #editor-container {
             display: flex;
-            flex:1;
-            height:100%;
-            flex-direction: column;
-            
-            background-color: white; /* Dark background color */
-            
-            width: 50%; /* Set width to 50% of the window */
+            flex: 1;
+            flex-direction: row;
+            background-color: white;
+        }
+
+        #editor {
+            height: 100%;
+            width: 50%;
+            border: 1px solid lightgray;
         }
 
         #output-container {
             display: flex;
-         flex:1;
+            flex: 1;
             flex-direction: column;
-            background-color: white; /* Dark background color for console */
+            background-color: white;
             padding: 10px;
             overflow-y: auto;
             white-space: pre-wrap;
             font-family: monospace;
-            height: 100%;
-            color: black; /* Light text color for console */
+            color: black;
+            width: 50%;
         }
 
         /* Add styles for buttons */
@@ -59,14 +74,13 @@
             margin-top: 5px;
             border: none;
             outline: none;
+            background-color: #333;
+            color: white;
         }
- #editor {
-        height: 100%; /* Set the height of the editor to 100% of its parent container */
-     border:1px solid light black;
-    }
+
         .toolbar {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             padding: 10px;
         }
 
@@ -81,32 +95,31 @@
         }
 
         button:active {
-            background-color: #0056b3; /* Darker blue when button is pressed */
+            background-color: #0056b3;
         }
-       
     </style>
 </head>
 
 <body>
-    <div id="editor-container">
-        <div class="toolbar">
-            <button onclick="toggleOutput('editorOutput')"><i class="fa fa-code"></i> Editor Output</button>
-            <button onclick="toggleOutput('consoleOutput')"><i class="fa fa-terminal"></i> Console Output</button>
-            <button onclick="runCode()"><i class="fa fa-play"></i> Run Code</button>
-            <button onclick="saveCode()"><i class="fa fa-save"></i> Save Code</button>
-        </div>
-        <div id="editor"></div>
-    </div>
-    <div id="output-container">
+    <div id="navbar">
+        <span>PlayJS</span>
+        <button onclick="toggleOutput('editorOutput')"><i class="fa fa-code"></i> Editor Output</button>
+        <button onclick="toggleOutput('consoleOutput')"><i class="fa fa-terminal"></i> Console Output</button>
+        <button onclick="runCode()"><i class="fa fa-play"></i> Run Code</button>
+        <button onclick="saveCode()"><i class="fa fa-save"></i> Save Code</button>
         <button onclick="clearConsole()"><i class="fa fa-trash"></i> Clear Console</button>
-        <div id="consoleOutput"></div>
+    </div>
+    <div id="editor-container">
+        <div id="editor"></div>
+        <div id="output-container">
+            <div id="consoleOutput"></div>
+        </div>
     </div>
 
     <script>
         // Initialize CodeMirror
         const editor = CodeMirror(document.getElementById('editor'), {
             mode: 'javascript',
-           
             lineNumbers: true,
             autoCloseBrackets: true,
             indentUnit: 4,
@@ -172,11 +185,11 @@
         // Toggle between editor and console outputs
         function toggleOutput(output) {
             if (output === 'editorOutput') {
-                editorContainer.style.width = '50%';
+                editorContainer.style.width = '100%';
                 editorContainer.style.height = '100%';
                 outputContainer.style.display = 'none';
             } else if (output === 'consoleOutput') {
-                editorContainer.style.width = '0%';
+                editorContainer.style.width = '50%';
                 outputContainer.style.display = 'flex';
             }
         }
