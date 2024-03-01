@@ -73,7 +73,6 @@
             font-family: monospace;
             color: black;
             width: 50%;
-            display: none; /* Initially hide the output container */
         }
 
         /* Add styles for buttons */
@@ -173,6 +172,8 @@
                 runCode();
             },
         });
+
+        const consoleOutput = document.getElementById('consoleOutput');
 
         function runCode() {
             const code = editor.getValue();
