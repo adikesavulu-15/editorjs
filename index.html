@@ -179,33 +179,9 @@
             clearConsole();
             const code = editor.getValue();
 
-            // Create an iframe to execute the code and capture console.log
-            const iframe = document.createElement('iframe');
-            document.body.appendChild(iframe);
+          
 
-            iframe.contentWindow.onerror = function (message, source, lineno, colno, error) {
-                // Handle runtime errors
-                consoleOutput.innerHTML = '<span style="color: red;">Error: ' + message + '</span>';
-            };
-
-            iframe.contentWindow.console.log = function (message) {
-                // Log console output to the consoleOutput div
-                const outputDiv = document.createElement('div');
-                outputDiv.innerHTML = '<span style="color: green;">&lt; ' + message + '</span>';
-                consoleOutput.appendChild(outputDiv);
-
-                // Scroll console to bottom
-                consoleOutput.scrollTop = consoleOutput.scrollHeight;
-            };
-
-            // Set the iframe content to the provided code
-            iframe.contentDocument.open();
-            iframe.contentDocument.write('<script>' + code + '</script>');
-            iframe.contentDocument.close();
-
-            // Remove the iframe from the document
-            document.body.removeChild(iframe);
-        }
+          
 
         function clearConsole() {
             consoleOutput.innerHTML = '';
