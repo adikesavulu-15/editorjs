@@ -31,31 +31,25 @@
         #navbar {
             background-color: #333;
             color: red;
-            text-align: center;
+            text-align: left;
             padding: 10px;
             font-weight: bold;
-            display: flex;
-            justify-content: space-between;
             position: fixed;
             width: 100%;
-            z-index: 1;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
         }
 
-        #navbar-left {
-            display: flex;
-            align-items: center;
-        }
-
-        #navbar-right {
-            display: flex;
-            align-items: center;
+        #navbar a {
+            color: red;
+            text-decoration: none;
         }
 
         #editor-container {
             display: flex;
             flex: 1;
             flex-direction: row;
-            background-color: white;
         }
 
         #editor {
@@ -112,10 +106,8 @@
 
 <body>
     <div id="navbar">
-        <div id="navbar-left">
-            <span>PlayJS</span>
-        </div>
-        <div id="navbar-right">
+        <span>PlayJS</span>
+        <div>
             <button onclick="toggleOutput('editorOutput')"><i class="fa fa-code"></i> Editor Output</button>
             <button onclick="toggleOutput('consoleOutput')"><i class="fa fa-terminal"></i> Console Output</button>
             <button onclick="runCode()"><i class="fa fa-play"></i> Run Code</button>
