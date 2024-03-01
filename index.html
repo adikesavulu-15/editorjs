@@ -181,7 +181,7 @@
             outputDiv.innerHTML = '<strong>Output:</strong>';
 
             try {
-                const result = new Function(code)();
+                const result = eval(code);
                 outputDiv.innerHTML += '<br/><span style="color: green;">' + result + '</span>';
             } catch (error) {
                 outputDiv.innerHTML += '<br/><span style="color: red;">Error: ' + error.message + '</span>';
