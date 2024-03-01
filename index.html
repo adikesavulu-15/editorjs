@@ -125,31 +125,32 @@
 
     <script>
         // Initialize CodeMirror
-        const editor = CodeMirror(document.getElementById('editor'), {
-            mode: 'javascript',
-            lineNumbers: true,
-            autoCloseBrackets: true,
-            indentUnit: 4,
-            tabSize: 4,
-            lineWrapping: true,
-            scrollbarStyle: 'overlay',
-            matchBrackets: true,
-            autoCloseTags: true,
-             readOnly: false,
-    lineWiseCopyCut: true,
-    lineSeparator: '\n',
-    direction: 'ltr',
-    rtlMoveVisually: false,
-    keyMap: 'default',
-    showCursorWhenSelecting: true,
-    autofocus: false,
+const editor = CodeMirror(document.getElementById('editor'), {
+    mode: 'javascript',
+    lineNumbers: true,
+    autoCloseBrackets: true,
+    indentUnit: 4,
+    tabSize: 4,
+    lineWrapping: true,
+    scrollbarStyle: 'overlay',
+    matchBrackets: true,
+    autoCloseTags: true,
+    extraKeys: {
+        'Ctrl-Space': 'autocomplete',
+    },
+    theme: 'darcula', // Use 'darcula' theme for the editor
     styleActiveLine: true,
-    viewportMargin: 10,
-    coverGutterNextToScrollbar: true,
-            extraKeys: {
-                'Ctrl-Space': 'autocomplete',
-            },
-        });
+    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+    foldGutter: true,
+    lint: true,
+    lintOnChange: true,
+    lintOptions: {
+        esversion: 6,
+    },
+    lintAsync: true,
+    gutters: ['CodeMirror-lint-markers'],
+});
+
 
         const consoleOutput = document.getElementById('consoleOutput');
         const editorContainer = document.getElementById('editor-container');
