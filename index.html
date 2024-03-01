@@ -17,11 +17,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/edit/matchbrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/javascript-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/javascript-hint.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/lint/lint.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/lint/javascript-lint.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/lint/lint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/lint/javascript-lint.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.css">
     <style>
@@ -76,6 +74,7 @@
             font-family: monospace;
             color: black;
             width: 50%;
+            display: none; /* Initially hide the output container */
         }
 
         /* Add styles for buttons */
@@ -95,12 +94,6 @@
             padding: 10px;
         }
 
-        #outputButtons {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 10px;
-        }
-
         .fa {
             margin-right: 5px;
         }
@@ -115,9 +108,7 @@
     <div id="navbar">
         <span>PlayJS</span>
         <div>
-            <button onclick="toggleOutput('editorOutput')"><i class="fa fa-code"></i> Editor Output</button>
-            <button onclick="toggleOutput('consoleOutput')"><i class="fa fa-terminal"></i> Console Output</button>
-            <button onclick="runCode()"><i class="fa fa-play"></i> Run Code</button>
+            <button onclick="toggleOutput()"><i class="fa fa-code"></i> Run Code</button>
             <button onclick="saveCode()"><i class="fa fa-save"></i> Save Code</button>
             <button onclick="clearConsole()"><i class="fa fa-trash"></i> Clear Console</button>
         </div>
@@ -131,136 +122,80 @@
 
     <script>
         // Initialize CodeMirror
-const editor = CodeMirror(document.getElementById('editor'), {
-    mode: 'javascript',
-    lineNumbers: true,
-    autoCloseBrackets: true,
-    indentUnit: 4,
-    tabSize: 4,
-    lineWrapping: true,
-    scrollbarStyle: 'overlay',
-    matchBrackets: true,
-    autoCloseTags: true,
-    theme: 'eclipse',
-    styleActiveLine: true,
-    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
-    foldGutter: true,
-    lint: true,
-    lintOnChange: true,
-    lintOptions: {
-        esversion: 6,
-    },
-    lintAsync: true,
-    extraKeys: {
-        'Ctrl-Space': 'autocomplete',
-    },
-    hintOptions: {
-        completeSingle: false, // Whether to automatically select the only completion
-    },
-    showHint: true, // Enable code hints
-});
-
-// Load JavaScript linting library
-CodeMirror.registerHelper("lint", "javascript", CodeMirror.lint.javascript);
-
-// CodeMirror autocomplete setup
-CodeMirror.commands.autocomplete = function (cm) {
-    cm.showHint({
-        hint: CodeMirror.hint.javascript,
-        completeSingle: false,
-    });
-};
-
-// Run the code on pressing Ctrl + Enter
-editor.setOption('extraKeys', {
-    'Ctrl-Enter': function () {
-        runCode();
-    },
-});
-
-function runCode() {
-    const code = editor.getValue();
-    const outputDiv = document.createElement('div');
-    outputDiv.innerHTML = '<strong></strong>';
-
-    try {
-        new Function(code)();
-    } catch (error) {
-        outputDiv.innerHTML += '<br/><span style="color: red;">Error: ' + error.message + '</span>';
-    }
-
-    consoleOutput.appendChild(outputDiv);
-}
-
-// Clear console output
-function clearConsole() {
-    consoleOutput.innerHTML = '';
-}
-
-
-
-        const consoleOutput = document.getElementById('consoleOutput');
-        const editorContainer = document.getElementById('editor-container');
-        const outputContainer = document.getElementById('output-container');
-
-        // Redirect console.log to a custom function
-        const customConsole = {
-            log: function (message) {
-                const outputDiv = document.createElement('div');
-                outputDiv.innerHTML = '<span style="color: green;">&lt; ' + message + '</span>';
-                consoleOutput.appendChild(outputDiv);
-
-                // Scroll console to bottom
-                outputContainer.scrollTop = outputContainer.scrollHeight;
+        const editor = CodeMirror(document.getElementById('editor'), {
+            mode: 'javascript',
+            lineNumbers: true,
+            autoCloseBrackets: true,
+            indentUnit: 4,
+            tabSize: 4,
+            lineWrapping: true,
+            scrollbarStyle: 'overlay',
+            matchBrackets: true,
+            autoCloseTags: true,
+            theme: 'eclipse',
+            styleActiveLine: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
+            foldGutter: true,
+            lint: true,
+            lintOnChange: true,
+            lintOptions: {
+                esversion: 6,
             },
+            lintAsync: true,
+            extraKeys: {
+                'Ctrl-Space': 'autocomplete',
+            },
+            hintOptions: {
+                completeSingle: false, // Whether to automatically select the only completion
+            },
+            showHint: true, // Enable code hints
+        });
+
+        // Load JavaScript linting library
+        CodeMirror.registerHelper("lint", "javascript", CodeMirror.lint.javascript);
+
+        // CodeMirror autocomplete setup
+        CodeMirror.commands.autocomplete = function (cm) {
+            cm.showHint({
+                hint: CodeMirror.hint.javascript,
+                completeSingle: false,
+            });
         };
 
-        // Function to execute code in the console and update output
-        function executeCode() {
+        // Run the code on pressing Ctrl + Enter
+        editor.setOption('extraKeys', {
+            'Ctrl-Enter': function () {
+                runCode();
+            },
+        });
+
+        function runCode() {
             const code = editor.getValue();
             const outputDiv = document.createElement('div');
             outputDiv.innerHTML = '<strong></strong>';
 
             try {
-                // Execute code using eval with custom console
-                new Function('console', code)(customConsole);
+                new Function(code)();
             } catch (error) {
                 outputDiv.innerHTML += '<br/><span style="color: red;">Error: ' + error.message + '</span>';
             }
 
+            // Display the output container and append the result
+            outputContainer.style.display = 'flex';
             consoleOutput.appendChild(outputDiv);
         }
 
-        // Run code in the editor
-       
-
-        // Save code
-        function saveCode() {
-            // Add your code to save the code
-            console.log('Code saved');
-        }
-
         // Clear console output
-      
+        function clearConsole() {
+            consoleOutput.innerHTML = '';
+            // Hide the output container when clearing the console
+            outputContainer.style.display = 'none';
+        }
 
         // Toggle between editor and console outputs
-        function toggleOutput(output) {
-            if (output === 'editorOutput') {
-                editorContainer.style.width = '100%';
-                editorContainer.style.height = '100%';
-                outputContainer.style.display = 'none';
-            } else if (output === 'consoleOutput') {
-                editorContainer.style.width = '50%';
-                outputContainer.style.display = 'flex';
-            }
+        function toggleOutput() {
+            runCode();
         }
-
-        // Listen for Enter key press in the console input
-        document.addEventListener('keyup', function (event) {
-            if (event.key === 'Enter') {
-                executeCode();
-            }
-        });
     </script>
 </body>
 
