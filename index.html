@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/lint/lint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/lint/javascript-lint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/javascript-hint.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.css">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -99,6 +104,19 @@
 <body>
     <div id="navbar">
         <span>PlayJS</span>
+        <div style="display:flex;flex-direction:row;>
+                    <form name="contact" netlify>
+          <p>
+            <label>Name <input type="text" name="name" /></label>
+          </p>
+          <p>
+            <label>Email <input type="email" name="email" /></label>
+          </p>
+          <p>
+            <button type="submit">Send</button>
+          </p>
+        </form>
+        </div>
         <div>
             <button onclick="runCode()"><i class="fa fa-play"></i> Run Code</button>
             <button onclick="saveCode()"><i class="fa fa-save"></i> Save Code</button>
@@ -161,25 +179,14 @@
             clearConsole();
             const code = editor.getValue();
 
-            const iframe = document.createElement('iframe');
-            document.body.appendChild(iframe);
-
-            iframe.contentWindow.onerror = function (message, source, lineno, colno, error) {
-                consoleOutput.innerHTML = '<span style="color: red;">Error: ' + message + '</span>';
-            };
-
-            iframe.contentWindow.console.log = function (message) {
-                const outputDiv = document.createElement('div');
-                outputDiv.innerHTML = '<span style="color: green;">&lt; ' + message + '</span>';
-                consoleOutput.appendChild(outputDiv);
-                consoleOutput.scrollTop = consoleOutput.scrollHeight;
-            };
-
-            iframe.contentDocument.open();
-            iframe.contentDocument.write('<script>' + code + '</script>');
-            iframe.contentDocument.close();
-
-            document.body.removeChild(iframe);
+            try {
+                const result = eval(code);
+                if (result !== undefined) {
+                    consoleOutput.innerHTML = '<span style="color: green;">&lt; ' + result + '</span>';
+                }
+            } catch (error) {
+                consoleOutput.innerHTML = '<span style="color: red;">Error: ' + error.message + '</span>';
+            }
         }
 
         function clearConsole() {
