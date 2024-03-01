@@ -182,7 +182,7 @@
 
                 try {
                     // Execute code using eval with custom console
-                    new Function('console', code)(customConsole);
+                    new Function('console', code)(consoleOutput);
                 } catch (error) {
                     outputDiv.innerHTML += '<br/><span style="color: red;">Error: ' + error.message + '</span>';
                 }
