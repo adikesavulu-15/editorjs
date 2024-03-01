@@ -175,21 +175,20 @@
 
         const consoleOutput = document.getElementById('consoleOutput');
 
-        function runCode() {
-            const code = editor.getValue();
-            const outputDiv = document.createElement('div');
-            outputDiv.innerHTML = '<strong>Output:</strong>';
+         function runCode() {
+                const code = editor.getValue();
+                const outputDiv = document.createElement('div');
+                outputDiv.innerHTML = '<strong></strong>';
 
-            try {
-                const result = eval(code);
-                outputDiv.innerHTML += '<br/><span style="color: green;">' + result + '</span>';
-            } catch (error) {
-                outputDiv.innerHTML += '<br/><span style="color: red;">Error: ' + error.message + '</span>';
+                try {
+                    // Execute code using eval with custom console
+                    new Function('console', code)(customConsole);
+                } catch (error) {
+                    outputDiv.innerHTML += '<br/><span style="color: red;">Error: ' + error.message + '</span>';
+                }
+
+                consoleOutput.appendChild(outputDiv);
             }
-
-            consoleOutput.innerHTML = ''; // Clear previous output
-            consoleOutput.appendChild(outputDiv);
-        }
 
         // Clear console output
         function clearConsole() {
