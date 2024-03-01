@@ -178,23 +178,22 @@
         function runCode() {
             const code = editor.getValue();
             const outputDiv = document.createElement('div');
-            outputDiv.innerHTML = '<strong></strong>';
+            outputDiv.innerHTML = '<strong>Output:</strong>';
 
             try {
-                new Function(code)();
+                const result = new Function(code)();
+                outputDiv.innerHTML += '<br/><span style="color: green;">' + result + '</span>';
             } catch (error) {
                 outputDiv.innerHTML += '<br/><span style="color: red;">Error: ' + error.message + '</span>';
             }
 
             consoleOutput.innerHTML = ''; // Clear previous output
             consoleOutput.appendChild(outputDiv);
-            outputContainer.style.display = 'flex'; // Display the output container
         }
 
         // Clear console output
         function clearConsole() {
             consoleOutput.innerHTML = '';
-            outputContainer.style.display = 'none'; // Hide the output container
         }
 
         // Save code
