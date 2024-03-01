@@ -7,7 +7,7 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9981055443242316" crossorigin="anonymous"></script>
     <title>Play with JavaScript Online Editor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/theme/darcula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/theme/eclipse.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- Font Awesome for icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/mode/javascript/javascript.min.js"></script>
@@ -21,7 +21,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/lint/javascript-lint.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.css">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/addon/hint/show-hint.min.css">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -101,6 +100,12 @@
         button:active {
             background-color: #0056b3;
         }
+
+        .CodeMirror-lint-mark-error {
+            background: #FDD;
+            border-bottom: 1px solid #D00;
+            color: #D00;
+        }
     </style>
 </head>
 
@@ -108,7 +113,7 @@
     <div id="navbar">
         <span>PlayJS</span>
         <div>
-            <button onclick="toggleOutput()"><i class="fa fa-code"></i> Run Code</button>
+            <button onclick="runCode()"><i class="fa fa-play"></i> Run Code</button>
             <button onclick="saveCode()"><i class="fa fa-save"></i> Save Code</button>
             <button onclick="clearConsole()"><i class="fa fa-trash"></i> Clear Console</button>
         </div>
@@ -180,21 +185,21 @@
                 outputDiv.innerHTML += '<br/><span style="color: red;">Error: ' + error.message + '</span>';
             }
 
-            // Display the output container and append the result
-            outputContainer.style.display = 'flex';
+            consoleOutput.innerHTML = ''; // Clear previous output
             consoleOutput.appendChild(outputDiv);
+            outputContainer.style.display = 'flex'; // Display the output container
         }
 
         // Clear console output
         function clearConsole() {
             consoleOutput.innerHTML = '';
-            // Hide the output container when clearing the console
-            outputContainer.style.display = 'none';
+            outputContainer.style.display = 'none'; // Hide the output container
         }
 
-        // Toggle between editor and console outputs
-        function toggleOutput() {
-            runCode();
+        // Save code
+        function saveCode() {
+            // Add your code to save the code
+            console.log('Code saved');
         }
     </script>
 </body>
