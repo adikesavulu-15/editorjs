@@ -60,7 +60,9 @@
             border: none;
             outline: none;
         }
-
+ #editor {
+        height: 100%; /* Set the height of the editor to 100% of its parent container */
+    }
         .toolbar {
             display: flex;
             justify-content: flex-end;
@@ -80,10 +82,7 @@
         button:active {
             background-color: #0056b3; /* Darker blue when button is pressed */
         }
-        #editor{
-            height:100vh;
-            overflow-y:100vh;
-        }
+       
     </style>
 </head>
 
@@ -173,6 +172,7 @@
         function toggleOutput(output) {
             if (output === 'editorOutput') {
                 editorContainer.style.width = '50%';
+                editorContainer.style.height = '100%';
                 outputContainer.style.display = 'none';
             } else if (output === 'consoleOutput') {
                 editorContainer.style.width = '0%';
