@@ -175,27 +175,42 @@
 
         const consoleOutput = document.getElementById('consoleOutput');
 
-         function runCode() {
-                const code = editor.getValue();
+        function runCode() {
+            clearConsole();
+            const code = editor.getValue();
+
+            // Create an iframe to execute the code and capture console.log
+            const iframe = document.createElement('iframe');
+            document.body.appendChild(iframe);
+
+            iframe.contentWindow.onerror = function (message, source, lineno, colno, error) {
+                // Handle runtime errors
+                consoleOutput.innerHTML = '<span style="color: red;">Error: ' + message + '</span>';
+            };
+
+            iframe.contentWindow.console.log = function (message) {
+                // Log console output to the consoleOutput div
                 const outputDiv = document.createElement('div');
-                outputDiv.innerHTML = '<strong></strong>';
-
-                try {
-                    // Execute code using eval with custom console
-                    new Function('console', code)(consoleOutput);
-                } catch (error) {
-                    outputDiv.innerHTML += '<br/><span style="color: red;">Error: ' + error.message + '</span>';
-                }
-
+                outputDiv.innerHTML = '<span style="color: green;">&lt; ' + message + '</span>';
                 consoleOutput.appendChild(outputDiv);
-            }
 
-        // Clear console output
+                // Scroll console to bottom
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            };
+
+            // Set the iframe content to the provided code
+            iframe.contentDocument.open();
+            iframe.contentDocument.write('<script>' + code + '</script>');
+            iframe.contentDocument.close();
+
+            // Remove the iframe from the document
+            document.body.removeChild(iframe);
+        }
+
         function clearConsole() {
             consoleOutput.innerHTML = '';
         }
 
-        // Save code
         function saveCode() {
             // Add your code to save the code
             console.log('Code saved');
